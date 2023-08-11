@@ -1,0 +1,24 @@
+name: Deploy to Docker host
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Deploy to Docker host
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.LINODE_HOST }}
+          username: ${{ secrets.LINODE_USER }}
+          key: ${{ secrets.LINODE_KEY }}
+          script: |
+            cd /root/project/www/backend-php
+            GIT_SSH_COMMAND="ssh -i /root/.ssh/github" git pull
+            docker stack deploy -c /root/project/compose.yaml noteApp
