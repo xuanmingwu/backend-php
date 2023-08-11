@@ -12,7 +12,7 @@ header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers
 $request_uri = explode('?', $_SERVER['REQUEST_URI'], 2);
 
 // 過濾輸入以增強安全性
-$allowed_paths = ['/', '/AllenAPI/sign'];
+$allowed_paths = ['/', '/AllenAPI/sign', ];
 if (!in_array($request_uri[0], $allowed_paths)) {
   header('HTTP/1.0 404 Not Found');
   echo json_encode(["result" => false, "errorCode" => "Page not found"]);
