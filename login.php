@@ -47,9 +47,17 @@ if (
 
           // 將 JWT 加到 HTTP 頭部傳給用戶
           header("Authorization: Bearer " . $jwt);
-          $response["status"] = "success";
-          $response["code"] = 200;
-          $response["message"] = "登入成功。";
+
+          // 創建回應，包含 JWT 令牌
+          $response = [
+              "status" => "success",
+              "code" => 200,
+              "message" => "登入成功。",
+              "data" => [
+                  "Authorization" => "Bearer " . $jwt
+              ]
+          ];
+
         } else {
           $update_query = 'UPDATE users SET failed_attempts = failed_attempts + 1, last_failed_at = NOW() WHERE email = :email';
           $pdoDB->pdoQuery($update_query, [':email' => $data->parameters->email]);
@@ -71,6 +79,7 @@ if (
   $response["message"] = "無法登錄。資料不完整。";
 }
 
+// 將回應轉換為 JSON 格式並返回給客戶端
 http_response_code($response["code"]);
 echo json_encode($response);
 ?>
